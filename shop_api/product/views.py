@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Category, Product, Review
 from .serializers import CategorySerializer, ProductSerializer, ReviewSerializer
+from django.db.models import Avg, Count
 
 
 @api_view(['GET'])
@@ -55,3 +56,19 @@ def review_detail_view(request, id):
         return Response({'error': 'Review not found'}, status=status.HTTP_404_NOT_FOUND)
     serializer = ReviewSerializer(review)
     return Response(serializer.data)
+
+from django.db.models import Avg, Count
+
+@api_view(['GET'])
+def products_with_reviews_view(request):
+    products = Product.objects.annotate(rating=Avg('reviews__stars'))
+    serializer = ProductSerializer(products, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def categories_with_products_count_view(request):
+    categories = Category.objects.annotate(products_count=Count('product'))
+    serializer = CategorySerializer(categories, many=True)
+    return Response(serializer.data)
+
