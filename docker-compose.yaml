@@ -1,0 +1,20 @@
+version: '3'
+services:
+  afisha_backend:
+    build:
+      context: .
+    command: sh -c "python manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      - shop_api_data
+    ports:
+      - "8001:8000" # host:container
+  shop_api_data:
+    image: 'postgres:14'
+    environment:
+      POSTGRES_DB: postgres_spoh_api
+      POSTGRES_USER: postgres_spoh_users
+      POSTGRES_PASSWORD: 1234
+    volumes:
+      - 'shop-api-data:/var/lib/postgresql/data'
+volumes:
+  shop-api-data:
