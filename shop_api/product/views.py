@@ -11,11 +11,13 @@ from .serializers import (
     ProductSerializer, ProductValidateSerializer,
     ReviewSerializer, ReviewValidateSerializer
 )
+from common.permissions import IsOwner
 
 
 class CategoryListCreateAPIView(ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    permission_classes = [IsOwner]
 
     def create(self, request, *args, **kwargs):
         serializer = CategoryValidateSerializer(data=request.data)
@@ -49,11 +51,10 @@ class CategoryDetailAPIView(RetrieveUpdateDestroyAPIView):
         return Response(CategorySerializer(category).data,
                         status=status.HTTP_200_OK)
 
-
-
 class ProductListCreateAPIView(ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    permission_classes = [IsOwner]
 
     def create(self, request, *args, **kwargs):
         serializer = ProductValidateSerializer(data=request.data)
@@ -77,6 +78,7 @@ class ProductDetailAPIView(RetrieveUpdateDestroyAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'id'
+    permission_classes = [IsOwner]
 
     def update(self, request, *args, **kwargs):
         serializer = ProductValidateSerializer(data=request.data)

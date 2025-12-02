@@ -34,7 +34,7 @@ class ReviewValidateSerializer(serializers.Serializer):
     stars = serializers.IntegerField(min_value=1, max_value=5)
     product_id = serializers.IntegerField()
 
-    def validete_product_id(self, product_id):
+    def validate_product_id(self, product_id):
         try:
             Product.objects.get(id=product_id)
         except Product.DoesNotExist:
@@ -47,7 +47,7 @@ class ProductValidateSerializer(serializers.Serializer):
     price = serializers.FloatField(min_value=1)
     category_id = serializers.IntegerField()
 
-    def nalidate_category_id(self, category_id):
+    def validate_category_id(self, category_id):
         try:
             Category.objects.get(id=category_id)
         except Category.DoesNotExist:
