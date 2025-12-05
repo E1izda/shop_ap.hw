@@ -12,6 +12,7 @@ from .serializers import (
     ReviewSerializer, ReviewValidateSerializer
 )
 from common.permissions import IsOwner
+from common.validators import validate_user_age
 
 
 class CategoryListCreateAPIView(ListCreateAPIView):
@@ -55,6 +56,10 @@ class ProductListCreateAPIView(ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [IsOwner]
+
+    def perform_create(self, serializer):
+        validate_user_age(self.request)
+        serializer.save(owner=self.request.user)
 
     def create(self, request, *args, **kwargs):
         serializer = ProductValidateSerializer(data=request.data)

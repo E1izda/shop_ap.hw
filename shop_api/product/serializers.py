@@ -19,7 +19,26 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     reviews = ReviewSerializer(many=True, read_only=True)
-    rating = serializers.FloatField(read_only=True) 
+    rating = serializers.FloatField(read_only=True)\
+    
+    def validate(self, attrs):
+        request = self.context.get('request')
+        if request is None:
+            raise serializers.ValidationError("Request не передан в сериализатор.")
+
+        from common.validators import validate_user_age
+        validate_user_age(request.user)
+
+        return attrs
+
+    class Meta:
+        model = Product
+        fields = '__all__'
+
+
+class CategoryValidateSerializer(serializers.Serializer):
+    name = serializers.CharField(required=True, min_length=2, max_length=250)
+
 
     class Meta:
         model = Product
