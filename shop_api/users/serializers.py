@@ -52,3 +52,6 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             user.birthdate.isoformat() if user.birthdate else None
         )
         return token
+    
+class OuathCodeSerializer(serializers.Serializer):
+    code = serializers.CharField()
