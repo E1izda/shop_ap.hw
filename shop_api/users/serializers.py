@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from users.models import ConfirmationCode, CustomUser
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-
+from .import utils
 class UserBaseSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField()
@@ -34,13 +34,16 @@ class ConfirmationSerializer(serializers.Serializer):
         except CustomUser.DoesNotExist:
             raise ValidationError('CustomUser не существует!')
 
-        try:
-            confirmation_code = ConfirmationCode.objects.get(user=user)
-        except ConfirmationCode.DoesNotExist:
-            raise ValidationError('Код подтверждения не найден!')
+        # try:
+        #     confirmation_code = ConfirmationCode.objects.get(user=user)
+        # except ConfirmationCode.DoesNotExist:
+        #     raise ValidationError('Код подтверждения не найден!')
 
-        if confirmation_code.code != code:
-            raise ValidationError('Неверный код подтверждения!')
+        # if confirmation_code.code != code:
+        #     raise ValidationError('Неверный код подтверждения!')
+
+        if not utils.verify_confirmation_code(user.email, code):
+            raise serializers.ValidationError("Неверный код подтверждения")
 
         return attrs
     

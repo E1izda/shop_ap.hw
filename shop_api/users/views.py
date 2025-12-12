@@ -14,6 +14,7 @@ from .serializers import (
 from users.models import ConfirmationCode, CustomUser
 import random
 import string
+from . import utils
 
 
 class AuthorizationAPIView(CreateAPIView):
@@ -59,12 +60,17 @@ class RegistrationAPIView(CreateAPIView):
                 is_active=False
             )
 
-            code = ''.join(random.choices(string.digits, k=6))
+            # code = ''.join(random.choices(string.digits, k=6))
 
-            confirmation_code = ConfirmationCode.objects.create(
-                user=user,
-                code=code
-            )
+            # confirmation_code = ConfirmationCode.objects.create(
+            #     user=user,
+            #     code=code
+            # )
+
+        code = utils.generate_confirmation_code()
+        utils.save_code_to_cache(user.email, code)
+        print("Code generated and saved to cache.")
+
 
 
         return Response(
