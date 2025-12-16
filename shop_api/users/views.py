@@ -15,6 +15,7 @@ from users.models import ConfirmationCode, CustomUser
 import random
 import string
 from . import utils
+from users.tasks import send_confirmation_email
 
 
 class AuthorizationAPIView(CreateAPIView):
@@ -59,6 +60,7 @@ class RegistrationAPIView(CreateAPIView):
                 password=password,
                 is_active=False
             )
+            send_confirmation_email.delay(email, code)
 
             # code = ''.join(random.choices(string.digits, k=6))
 
