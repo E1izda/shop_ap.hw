@@ -23,10 +23,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return self.phone_number or self.email or "User"
 
 
-# class ConfirmationCode(models.Model):
-#     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='confirmation_code')
-#     code = models.CharField(max_length=6)
-#     created_at = models.DateTimeField(auto_now_add=True)
+class ConfirmationCode(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='confirmation_code')
+    code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
 
-#     def __str__(self):
-#         return f"Код подтверждения для {self.user.phone_number or self.user.email}"
+    def __str__(self):
+        return f"Код подтверждения для {self.user.phone_number or self.user.email}"
